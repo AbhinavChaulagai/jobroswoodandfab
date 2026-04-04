@@ -1,25 +1,21 @@
 <?php
 /**
- * product.php — Single product detail page.
- * Usage: /product.php?id=1
+ * product.php — Single product detail page with image gallery.
  */
 require_once __DIR__ . '/includes/functions.php';
 
-// Validate the ID from the query string
 $product_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 $product    = $product_id > 0 ? get_product_by_id($product_id) : null;
 
-// 404 handling — redirect to products page with a message
 if ($product === null) {
     header('HTTP/1.1 404 Not Found');
-    $page_title       = 'Product Not Found';
-    $meta_description = 'The requested product could not be found.';
+    $page_title = 'Product Not Found';
     require_once __DIR__ . '/includes/header.php';
     ?>
     <section class="page-banner page-banner--error">
         <div class="container">
             <h1 class="page-banner-title">Product Not Found</h1>
-            <p>We couldn't find that product. <a href="/products.php">Browse all products &rarr;</a></p>
+            <p>We couldn't find that product. <a href="/products">Browse all products &rarr;</a></p>
         </div>
     </section>
     <?php
@@ -30,12 +26,29 @@ if ($product === null) {
 $page_title       = $product['name'];
 $meta_description = $product['short_description'];
 
-// Get related products (same category, excluding current)
+// Build gallery: resolve every image to a full URL now
+$raw_images = get_product_images($product);
+$gallery    = [];
+foreach ($raw_images as $img) {
+    $gallery[] = [
+        'src'   => product_image_url($img, 900, 675),
+        'thumb' => product_image_url($img, 160, 120),
+        'alt'   => $product['name'],
+    ];
+}
+if (empty($gallery)) {
+    $gallery[] = [
+        'src'   => product_image_url('placeholder.jpg', 900, 675),
+        'thumb' => product_image_url('placeholder.jpg', 160, 120),
+        'alt'   => $product['name'],
+    ];
+}
+
 $related = array_filter(
     get_products_by_category($product['category']),
     fn($p) => (int)$p['id'] !== $product_id
 );
-$related = array_slice(array_values($related), 0, 2);
+$related = array_slice(array_values($related), 0, 3);
 
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -44,9 +57,9 @@ require_once __DIR__ . '/includes/header.php';
 <nav class="breadcrumb" aria-label="Breadcrumb">
     <div class="container">
         <ol class="breadcrumb-list">
-            <li><a href="/index.php">Home</a></li>
-            <li><a href="/products.php">Products</a></li>
-            <li><a href="/products.php?category=<?= rawurlencode($product['category']) ?>"><?= e($product['category']) ?></a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/products">Products</a></li>
+            <li><a href="/products?category=<?= rawurlencode($product['category']) ?>"><?= e($product['category']) ?></a></li>
             <li aria-current="page"><?= e($product['name']) ?></li>
         </ol>
     </div>
@@ -56,26 +69,51 @@ require_once __DIR__ . '/includes/header.php';
 <section class="section product-detail" aria-labelledby="product-name">
     <div class="container product-detail-inner">
 
-        <!-- Product image -->
-        <div class="product-detail-gallery">
-            <img
-                src="<?= e(product_image_url($product['image'], 800, 600)) ?>"
-                alt="<?= e($product['name']) ?>"
-                width="800"
-                height="600"
-                class="product-detail-main-img"
-            >
+        <!-- ── Gallery ── -->
+        <div class="gallery" id="productGallery">
+
+            <!-- Main image -->
+            <div class="gallery-main">
+                <img
+                    id="galleryMain"
+                    src="<?= e($gallery[0]['src']) ?>"
+                    alt="<?= e($gallery[0]['alt']) ?>"
+                    width="900"
+                    height="675"
+                >
+                <?php if (count($gallery) > 1): ?>
+                <!-- Prev / Next arrows -->
+                <button class="gallery-arrow gallery-prev" id="galleryPrev" aria-label="Previous image">&#8249;</button>
+                <button class="gallery-arrow gallery-next" id="galleryNext" aria-label="Next image">&#8250;</button>
+                <?php endif; ?>
+            </div>
+
+            <!-- Thumbnails -->
+            <?php if (count($gallery) > 1): ?>
+            <div class="gallery-thumbs" id="galleryThumbs" role="list" aria-label="Product images">
+                <?php foreach ($gallery as $i => $img): ?>
+                <button
+                    class="gallery-thumb <?= $i === 0 ? 'active' : '' ?>"
+                    data-src="<?= e($img['src']) ?>"
+                    data-index="<?= $i ?>"
+                    role="listitem"
+                    aria-label="View image <?= $i + 1 ?>"
+                >
+                    <img src="<?= e($img['thumb']) ?>" alt="<?= e($img['alt']) ?> thumbnail" loading="lazy" width="160" height="120">
+                </button>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
+
         </div>
 
-        <!-- Product info -->
+        <!-- ── Product info ── -->
         <div class="product-detail-info">
             <span class="product-card-category"><?= e($product['category']) ?></span>
             <h1 id="product-name" class="product-detail-title"><?= e($product['name']) ?></h1>
             <p class="product-detail-price"><?= e($product['price']) ?></p>
-
             <p class="product-detail-short-desc"><?= e($product['short_description']) ?></p>
 
-            <!-- Specs table -->
             <div class="product-specs">
                 <?php if (!empty($product['dimensions'])): ?>
                 <div class="spec-row">
@@ -97,14 +135,11 @@ require_once __DIR__ . '/includes/header.php';
                 <?php endif; ?>
             </div>
 
-            <!-- CTA buttons -->
             <div class="product-detail-actions">
-                <a href="/contact.php?product=<?= rawurlencode($product['name']) ?>" class="btn btn-primary btn-lg">
+                <a href="/contact?product=<?= rawurlencode($product['name']) ?>" class="btn btn-primary btn-lg">
                     Request a Quote
                 </a>
-                <a href="/products.php" class="btn btn-outline">
-                    &larr; Back to Products
-                </a>
+                <a href="/products" class="btn btn-outline">&larr; All Products</a>
             </div>
         </div>
     </div>
@@ -124,10 +159,10 @@ require_once __DIR__ . '/includes/header.php';
         <div class="product-grid">
             <?php foreach ($related as $rel): ?>
             <article class="product-card">
-                <a href="/product.php?id=<?= (int)$rel['id'] ?>" class="product-card-link" aria-label="View <?= e($rel['name']) ?>">
+                <a href="/product?id=<?= (int)$rel['id'] ?>" class="product-card-link" aria-label="View <?= e($rel['name']) ?>">
                     <div class="product-card-img-wrap">
                         <img
-                            src="<?= e(product_image_url($rel['image'], 600, 450)) ?>"
+                            src="<?= e(get_primary_image($rel, 600, 450)) ?>"
                             alt="<?= e($rel['name']) ?>"
                             loading="lazy"
                             width="600"
@@ -147,5 +182,10 @@ require_once __DIR__ . '/includes/header.php';
     </div>
 </section>
 <?php endif; ?>
+
+<!-- Gallery data for JS -->
+<script>
+window.GALLERY_IMAGES = <?= json_encode(array_column($gallery, 'src'), JSON_UNESCAPED_SLASHES) ?>;
+</script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

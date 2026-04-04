@@ -76,6 +76,29 @@ function product_image_url(string $filename, int $width = 600, int $height = 450
 }
 
 /**
+ * Return all images for a product as an array of URLs/filenames.
+ * Falls back to the legacy `image` field for backward compatibility.
+ */
+function get_product_images(array $product): array {
+    if (!empty($product['images']) && is_array($product['images'])) {
+        return array_values(array_filter($product['images']));
+    }
+    if (!empty($product['image'])) {
+        return [$product['image']];
+    }
+    return [];
+}
+
+/**
+ * Return the primary (first) image URL for a product.
+ */
+function get_primary_image(array $product, int $w = 600, int $h = 450): string {
+    $images = get_product_images($product);
+    $first  = $images[0] ?? ($product['image'] ?? '');
+    return $first !== '' ? product_image_url($first, $w, $h) : product_image_url('placeholder.jpg', $w, $h);
+}
+
+/**
  * Save the full products array back to the JSON file.
  * Returns true on success, false on failure.
  */

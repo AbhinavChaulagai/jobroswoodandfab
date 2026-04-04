@@ -7,6 +7,7 @@
     "long_description": "Our Farmhouse Dining Table is the heart of every home. Hand-built from solid white oak with a hand-rubbed oil finish that brings out the natural grain. Features heavy-duty mortise-and-tenon joinery for heirloom strength. Available in lengths from 60\" to 108\" to seat your whole family. Each table is unique — knots, grain patterns, and mineral streaks are celebrated, not hidden.",
     "price": "Contact for Quote",
     "materials": ["White Oak", "Linseed Oil Finish", "Steel Hardware"],
+    "images": ["dining-table.jpg", "dining-table-2.jpg", "dining-table-3.jpg"],
     "image": "dining-table.jpg",
     "dimensions": "72\"L x 36\"W x 30\"H (standard)",
     "lead_time": "6–8 weeks"
@@ -19,6 +20,7 @@
     "long_description": "A single slab of black walnut, kiln-dried and finished with a satin polyurethane to protect the natural live edge. Paired with hand-bent steel hairpin legs for an industrial-meets-organic look. The live edge is preserved in its natural state — no two tables are alike. Perfect as a centerpiece for any living room. Custom sizes and leg finishes available upon request.",
     "price": "$1,250",
     "materials": ["Black Walnut Slab", "Steel Hairpin Legs", "Satin Poly Finish"],
+    "images": ["coffee-table.jpg", "coffee-table-2.jpg"],
     "image": "coffee-table.jpg",
     "dimensions": "48\"L x 22\"W x 18\"H",
     "lead_time": "4–6 weeks"
@@ -31,6 +33,7 @@
     "long_description": "These floating wall shelves are cut from reclaimed barn pine, lightly sanded and finished with a clear matte lacquer that lets the wood's history show through. Each shelf ships with concealed mounting hardware for a clean, floating appearance. Sold as a set of three in graduated lengths (24\", 30\", 36\"). Perfect for home offices, living rooms, or entryways. Custom stain options available.",
     "price": "$340",
     "materials": ["Reclaimed Barn Pine", "Matte Lacquer", "Concealed Steel Brackets"],
+    "images": ["shelving.jpg", "shelving-2.jpg"],
     "image": "shelving.jpg",
     "dimensions": "36\" / 30\" / 24\" lengths x 8\"D x 1.5\"H",
     "lead_time": "2–3 weeks"
@@ -43,6 +46,7 @@
     "long_description": "Hand-crafted from Western Red Cedar, naturally resistant to rot and insects — no chemical treatment required. Joinery is all traditional wedged tenon, built to handle outdoor seasons without a wobble. The seat slats are gently radiused for comfort. Finished with a penetrating cedar oil that deepens the color and extends the life of the wood. Equally at home on a porch, in an entryway, or at the foot of a bed.",
     "price": "$480",
     "materials": ["Western Red Cedar", "Cedar Oil Finish", "Stainless Steel Hardware"],
+    "images": ["bench.jpg", "bench-2.jpg", "bench-3.jpg"],
     "image": "bench.jpg",
     "dimensions": "54\"L x 16\"D x 18\"H",
     "lead_time": "3–4 weeks"
@@ -55,6 +59,7 @@
     "long_description": "Our Platform Bed Frame is designed for those who love clean, modern lines with the warmth of solid wood. Built from solid ash with a subtle wire-brushed texture and a natural oil-wax finish. The low-profile platform base eliminates the need for a box spring. Features a slatted base for mattress airflow. Available in Queen, King, and California King. Custom headboard heights available. Ships flat-pack with simple assembly hardware.",
     "price": "Contact for Quote",
     "materials": ["Solid Ash", "Oil-Wax Finish", "Steel Slat Support"],
+    "images": ["bed-frame.jpg", "bed-frame-2.jpg"],
     "image": "bed-frame.jpg",
     "dimensions": "Queen: 65\"W x 86\"L x 14\"H (platform)",
     "lead_time": "6–8 weeks"
@@ -67,6 +72,7 @@
     "long_description": "The perfect companion to your sofa or beside your bed. The top is solid black walnut with a hand-rubbed Danish oil finish that highlights the deep chocolate tones and natural figure of the wood. The tapered legs are turned on a lathe in-house and mortised directly into the top for lasting rigidity. A lower shelf provides handy storage for books or a small plant. Built to be both beautiful and practical.",
     "price": "$295",
     "materials": ["Black Walnut", "Danish Oil Finish", "Turned Walnut Legs"],
+    "images": ["side-table.jpg", "side-table-2.jpg"],
     "image": "side-table.jpg",
     "dimensions": "18\"W x 18\"D x 24\"H",
     "lead_time": "3–4 weeks"

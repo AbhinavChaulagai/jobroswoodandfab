@@ -76,7 +76,7 @@ require_once __DIR__ . '/includes/header.php';
                 <a href="/product.php?id=<?= (int)$product['id'] ?>" class="product-card-link" aria-label="View <?= e($product['name']) ?>">
                     <div class="product-card-img-wrap">
                         <img
-                            src="<?= e(product_image_url($product['image'], 600, 450)) ?>"
+                            src="<?= e(get_primary_image($product, 600, 450)) ?>"
                             alt="<?= e($product['name']) ?>"
                             loading="lazy"
                             width="600"

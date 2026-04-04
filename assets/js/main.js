@@ -182,7 +182,56 @@
 
 
 /* ==========================================================================
-   4. Active nav highlight on scroll (for single-page sections, future use)
+   4. Product Image Gallery
    ========================================================================== */
-// Placeholder — currently the server sets the active class per page.
-// Extend here if sections within a page need highlight tracking.
+(function initGallery() {
+    const mainImg = document.getElementById('galleryMain');
+    const thumbs  = document.querySelectorAll('.gallery-thumb');
+    const prevBtn = document.getElementById('galleryPrev');
+    const nextBtn = document.getElementById('galleryNext');
+    const images  = window.GALLERY_IMAGES || [];
+
+    if (!mainImg || !images.length) return;
+
+    let current = 0;
+
+    function goTo(idx) {
+        current = (idx + images.length) % images.length;
+        // Fade swap
+        mainImg.style.opacity = '0';
+        setTimeout(function () {
+            mainImg.src = images[current];
+            mainImg.style.opacity = '1';
+        }, 150);
+        thumbs.forEach(function (t, i) {
+            t.classList.toggle('active', i === current);
+        });
+    }
+
+    thumbs.forEach(function (btn, i) {
+        btn.addEventListener('click', function () { goTo(i); });
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function (e) {
+        if (!document.getElementById('productGallery')) return;
+        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowRight') goTo(current + 1);
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    mainImg.addEventListener('touchstart', function (e) {
+        touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    mainImg.addEventListener('touchend', function (e) {
+        const delta = e.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) > 50) goTo(current + (delta < 0 ? 1 : -1));
+    }, { passive: true });
+
+    // Smooth opacity transition style
+    mainImg.style.transition = 'opacity 0.15s ease';
+})();
