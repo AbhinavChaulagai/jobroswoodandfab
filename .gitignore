@@ -1,0 +1,46 @@
+# =============================================================================
+# Jobros Wood & Fab — .gitignore
+# =============================================================================
+
+# ── Environment & secrets ──
+.env
+.env.*
+!.env.example
+
+# ── PHP / Composer ──
+/vendor/
+composer.lock
+
+# ── Log & data files (don't commit submissions) ──
+*.log
+data/contact_submissions.log
+
+# ── macOS ──
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# ── Windows ──
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Editors & IDEs ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Node (local tooling) ──
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# ── Vercel local ──
+.vercel/
