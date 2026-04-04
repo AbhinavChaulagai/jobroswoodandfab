@@ -14,7 +14,8 @@
     { "src": "/api/upload",           "dest": "/api/upload.php" },
 
     { "src": "/admin/dashboard",      "dest": "/admin/dashboard.php" },
-    { "src": "/admin/product",        "dest": "/admin/product.php" },
+    { "src": "/admin/product/([0-9]+)", "dest": "/admin/product.php?id=$1" },
+    { "src": "/admin/product",         "dest": "/admin/product.php" },
     { "src": "/admin/delete",         "dest": "/admin/delete.php" },
     { "src": "/admin/submissions",    "dest": "/admin/submissions.php" },
     { "src": "/admin/logout",         "dest": "/admin/logout.php" },

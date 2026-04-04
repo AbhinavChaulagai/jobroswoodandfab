@@ -102,7 +102,7 @@ if (!empty($_COOKIE['jwf_flash'])) {
                         <td class="td-actions">
                             <a href="/product/<?= (int)$p['id'] ?>" target="_blank"
                                class="btn btn-sm btn-ghost" title="View on site">👁</a>
-                            <a href="/admin/product?id=<?= (int)$p['id'] ?>"
+                            <a href="/admin/product/<?= (int)$p['id'] ?>"
                                class="btn btn-sm btn-outline">Edit</a>
                             <form method="POST" action="/admin/delete" class="d-inline"
                                   onsubmit="return confirm('Delete \'<?= htmlspecialchars(addslashes($p['name'])) ?>\'?')">
