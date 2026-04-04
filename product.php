@@ -156,7 +156,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="product-grid">
             <?php foreach ($related as $r): ?>
             <article class="product-card">
-                <a href="/product?id=<?= (int)$r['id'] ?>" class="product-card-link">
+                <a href="/product/<?= (int)$r['id'] ?>" class="product-card-link">
                     <div class="product-card-img-wrap">
                         <img src="<?= htmlspecialchars(get_primary_image($r, 600, 450)) ?>"
                              alt="<?= htmlspecialchars($r['name']) ?>"

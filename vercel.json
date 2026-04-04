@@ -22,7 +22,8 @@
     { "src": "/admin",                "dest": "/admin/index.php" },
 
     { "src": "/products",             "dest": "/products.php" },
-    { "src": "/product",              "dest": "/product.php" },
+    { "src": "/product/([0-9]+)",     "dest": "/product.php?id=$1" },
+    { "src": "/product",              "dest": "/products.php" },
     { "src": "/about",                "dest": "/about.php" },
     { "src": "/contact",              "dest": "/contact.php" },
     { "src": "/",                     "dest": "/index.php" },

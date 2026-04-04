@@ -22,8 +22,8 @@ require_once __DIR__ . '/includes/header.php';
         <h1 class="hero-title">Furniture Built<br>to Last Generations</h1>
         <p class="hero-subtitle">Every piece starts as a raw slab and ends as an heirloom. Custom sizes, custom finishes — built the way it used to be done.</p>
         <div class="hero-actions">
-            <a href="/products.php" class="btn btn-primary">Browse Products</a>
-            <a href="/contact.php" class="btn btn-outline">Request a Quote</a>
+            <a href="/products" class="btn btn-primary">Browse Products</a>
+            <a href="/contact" class="btn btn-outline">Request a Quote</a>
         </div>
     </div>
     <!-- Decorative wood-grain texture bars -->
@@ -73,7 +73,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="product-grid">
             <?php foreach ($featured_products as $product): ?>
             <article class="product-card">
-                <a href="/product.php?id=<?= (int)$product['id'] ?>" class="product-card-link" aria-label="View <?= e($product['name']) ?>">
+                <a href="/product/<?= (int)$product['id'] ?>" class="product-card-link" aria-label="View <?= e($product['name']) ?>">
                     <div class="product-card-img-wrap">
                         <img
                             src="<?= e(get_primary_image($product, 600, 450)) ?>"
@@ -96,7 +96,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <div class="section-cta">
-            <a href="/products.php" class="btn btn-primary">See All Products</a>
+            <a href="/products" class="btn btn-primary">See All Products</a>
         </div>
     </div>
 </section>
@@ -117,7 +117,7 @@ require_once __DIR__ . '/includes/header.php';
             <h2 class="section-title" id="about-blurb-heading">Built by Hand.<br>Meant to Stay.</h2>
             <p>Jobros Wood &amp; Fab started with a workbench, a few hand tools, and a belief that furniture should outlast the people who buy it. Every joint is cut, every surface is planed, and every finish is rubbed on by hand.</p>
             <p>We work with sustainably sourced domestic hardwoods — white oak, black walnut, cherry, ash, and reclaimed pine — and we'll never use a veneer or a short-cut when the real thing is an option.</p>
-            <a href="/about.php" class="btn btn-primary">Our Story</a>
+            <a href="/about" class="btn btn-primary">Our Story</a>
         </div>
     </div>
 </section>
@@ -127,7 +127,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="container cta-banner-inner">
         <h2 id="cta-heading">Have something in mind?</h2>
         <p>Bring us your sketch, a napkin drawing, or just a description — we'll make it real.</p>
-        <a href="/contact.php" class="btn btn-primary btn-lg">Start a Conversation</a>
+        <a href="/contact" class="btn btn-primary btn-lg">Start a Conversation</a>
     </div>
 </section>
 

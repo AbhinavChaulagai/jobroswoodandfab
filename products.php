@@ -56,7 +56,7 @@ require_once __DIR__ . '/includes/header.php';
         <div class="product-grid product-grid--large">
             <?php foreach ($display_products as $p): ?>
             <article class="product-card">
-                <a href="/product?id=<?= (int)$p['id'] ?>" class="product-card-link">
+                <a href="/product/<?= (int)$p['id'] ?>" class="product-card-link">
 
                     <div class="product-card-img-wrap">
                         <img

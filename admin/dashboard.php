@@ -100,7 +100,7 @@ if (!empty($_COOKIE['jwf_flash'])) {
                         <td><?= htmlspecialchars($p['category']) ?></td>
                         <td><?= htmlspecialchars($p['price']) ?></td>
                         <td class="td-actions">
-                            <a href="/product?id=<?= (int)$p['id'] ?>" target="_blank"
+                            <a href="/product/<?= (int)$p['id'] ?>" target="_blank"
                                class="btn btn-sm btn-ghost" title="View on site">👁</a>
                             <a href="/admin/product?id=<?= (int)$p['id'] ?>"
                                class="btn btn-sm btn-outline">Edit</a>
