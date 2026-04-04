@@ -73,13 +73,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($errors)) {
             if (save_products($all)) {
+                $deploy_note = getenv('GITHUB_TOKEN') ? ' Changes will appear on the live site in ~1 minute.' : '';
                 flash('success', $is_edit
-                    ? ""{$product['name']}" updated successfully."
-                    : ""{$product['name']}" added successfully.");
+                    ? ""{$product['name']}" updated successfully.{$deploy_note}"
+                    : ""{$product['name']}" added successfully.{$deploy_note}");
                 header('Location: /admin/dashboard');
                 exit;
             }
-            $errors[] = 'Could not write to products.json. Check file permissions.';
+            $errors[] = 'Could not save products. On Vercel you must set GITHUB_TOKEN and GITHUB_REPO environment variables — see the README or ask your developer.';
         }
     }
 

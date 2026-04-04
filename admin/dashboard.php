@@ -46,6 +46,16 @@ if (!empty($_COOKIE['jwf_flash'])) {
     </div>
     <?php endif; ?>
 
+    <?php if (!getenv('GITHUB_TOKEN') || !getenv('GITHUB_REPO')): ?>
+    <div class="alert alert-error" style="font-size:0.85rem">
+        <strong>⚠ Product saving is not configured.</strong>
+        To add, edit, or delete products you must set two environment variables in your
+        <a href="https://vercel.com/dashboard" target="_blank" rel="noopener" style="color:inherit;font-weight:700">Vercel Project Settings → Environment Variables</a>:<br>
+        <code style="background:rgba(0,0,0,0.06);padding:2px 5px;border-radius:3px;margin:4px 0;display:inline-block">GITHUB_TOKEN</code> — a GitHub Personal Access Token with <em>Contents: Read &amp; Write</em> permission<br>
+        <code style="background:rgba(0,0,0,0.06);padding:2px 5px;border-radius:3px;margin:4px 0;display:inline-block">GITHUB_REPO</code> — your repo in <code style="background:rgba(0,0,0,0.06);padding:2px 5px;border-radius:3px">owner/repo</code> format (e.g. <code style="background:rgba(0,0,0,0.06);padding:2px 5px;border-radius:3px">johndoe/jobroswoodandfab</code>)
+    </div>
+    <?php endif; ?>
+
     <!-- Stats row -->
     <div class="stats-grid">
         <div class="stat-card">

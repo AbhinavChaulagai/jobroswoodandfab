@@ -99,13 +99,84 @@ function get_primary_image(array $product, int $w = 600, int $h = 450): string {
 }
 
 /**
- * Save the full products array back to the JSON file.
+ * Save the full products array.
+ *
+ * On Vercel the deployed filesystem is read-only, so we commit directly to
+ * GitHub via the Contents API.  Set two env vars in Vercel Project Settings:
+ *   GITHUB_TOKEN  – Personal Access Token with repo (contents:write) scope
+ *   GITHUB_REPO   – owner/repo  (e.g. "johndoe/jobroswoodandfab")
+ *   GITHUB_BRANCH – branch to commit to (defaults to "main")
+ *
+ * Falls back to a local file_put_contents when those vars are absent (useful
+ * in local development).
+ *
  * Returns true on success, false on failure.
  */
 function save_products(array $products): bool {
+    $token  = getenv('GITHUB_TOKEN')  ?: '';
+    $repo   = getenv('GITHUB_REPO')   ?: '';
+    $branch = getenv('GITHUB_BRANCH') ?: 'main';
+
+    if ($token !== '' && $repo !== '') {
+        return _github_put_products($products, $token, $repo, $branch);
+    }
+
+    // Local fallback (works in dev; fails on Vercel – see env vars above).
     $path = __DIR__ . '/../data/products.json';
     $json = json_encode(array_values($products), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     return file_put_contents($path, $json, LOCK_EX) !== false;
+}
+
+/**
+ * Commit products.json to GitHub using the Contents API.
+ * @internal
+ */
+function _github_put_products(array $products, string $token, string $repo, string $branch): bool {
+    $file_path = 'data/products.json';
+    $api_base  = "https://api.github.com/repos/{$repo}/contents/{$file_path}";
+    $json      = json_encode(array_values($products), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+    $auth_headers = implode("\r\n", [
+        "Authorization: token {$token}",
+        "Accept: application/vnd.github.v3+json",
+        "User-Agent: jobros-admin/1.0",
+        "Content-Type: application/json",
+    ]);
+
+    // 1. GET current file SHA (required for updates).
+    $get_ctx  = stream_context_create(['http' => [
+        'method'        => 'GET',
+        'header'        => $auth_headers,
+        'ignore_errors' => true,
+    ]]);
+    $get_resp = @file_get_contents("{$api_base}?ref={$branch}", false, $get_ctx);
+    $sha      = null;
+    if ($get_resp !== false) {
+        $get_data = json_decode($get_resp, true);
+        $sha = $get_data['sha'] ?? null;
+    }
+
+    // 2. PUT (create or update) the file.
+    $body = [
+        'message' => 'chore: update products.json via admin panel',
+        'content' => base64_encode($json),
+        'branch'  => $branch,
+    ];
+    if ($sha !== null) {
+        $body['sha'] = $sha;
+    }
+
+    $put_ctx  = stream_context_create(['http' => [
+        'method'        => 'PUT',
+        'header'        => $auth_headers,
+        'content'       => json_encode($body),
+        'ignore_errors' => true,
+    ]]);
+    $put_resp = @file_get_contents($api_base, false, $put_ctx);
+    if ($put_resp === false) return false;
+
+    $put_data = json_decode($put_resp, true);
+    return isset($put_data['content']['sha']); // non-empty SHA = success
 }
 
 /**
