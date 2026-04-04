@@ -2,26 +2,25 @@
 /**
  * admin/edit.php — Add a new product or edit an existing one.
  * GET  ?id=X  → load existing product into form
- * GET  (no id) → blank form for new product
- * POST         → save product and redirect to dashboard
+ * GET  (no id)→ blank form for new product
+ * POST        → save and redirect
  */
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/../includes/functions.php';
 
-$is_edit  = isset($_GET['id']) || isset($_POST['id']);
-$product  = null;
-$errors   = [];
+$is_edit = false;
+$product = null;
+$errors  = [];
 
-// ── Handle POST (save) ────────────────────────────────────────────────────────
+// ── POST: save ────────────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
-    $id       = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
-    $is_edit  = $id !== null;
+    $id      = isset($_POST['id']) && $_POST['id'] !== '' ? (int)$_POST['id'] : null;
+    $is_edit = $id !== null;
 
-    // Build product array from POST
     $product = [
-        'id'                => $id ?? 0, // placeholder; replaced below
+        'id'                => $id ?? 0,
         'name'              => trim($_POST['name']              ?? ''),
         'category'          => trim($_POST['category']          ?? ''),
         'short_description' => trim($_POST['short_description'] ?? ''),
@@ -33,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'lead_time'         => trim($_POST['lead_time']         ?? ''),
     ];
 
-    // Validate
     if ($product['name'] === '')              $errors[] = 'Product name is required.';
     if ($product['category'] === '')          $errors[] = 'Category is required.';
     if ($product['short_description'] === '') $errors[] = 'Short description is required.';
@@ -41,52 +39,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($product['image'] === '')             $errors[] = 'Image filename or URL is required.';
 
     if (empty($errors)) {
-        $all_products = get_all_products();
+        $all = get_all_products();
 
         if ($is_edit) {
-            // Replace existing product
-            foreach ($all_products as &$p) {
-                if ((int)$p['id'] === $id) {
-                    $product['id'] = $id;
-                    $p = $product;
-                    break;
-                }
+            foreach ($all as &$p) {
+                if ((int)$p['id'] === $id) { $product['id'] = $id; $p = $product; break; }
             }
             unset($p);
         } else {
-            // New product — assign next ID
-            $product['id'] = next_product_id($all_products);
-            $all_products[] = $product;
+            $product['id'] = next_product_id($all);
+            $all[] = $product;
         }
 
-        if (save_products($all_products)) {
-            $_SESSION['flash'] = [
-                'type' => 'success',
-                'msg'  => $is_edit
-                    ? "Product \"{$product['name']}\" updated successfully."
-                    : "Product \"{$product['name']}\" added successfully.",
-            ];
-            header('Location: /admin/dashboard.php');
+        if (save_products($all)) {
+            flash_set('success', $is_edit
+                ? "Product \"{$product['name']}\" updated."
+                : "Product \"{$product['name']}\" added.");
+            header('Location: /admin/dashboard');
             exit;
-        } else {
-            $errors[] = 'Failed to save products.json — check file permissions.';
         }
+        $errors[] = 'Failed to save products.json — check file permissions.';
     }
 
-// ── Handle GET (load form) ────────────────────────────────────────────────────
+// ── GET: load form ────────────────────────────────────────────────────────────
 } elseif (isset($_GET['id'])) {
     $id      = (int)$_GET['id'];
     $product = get_product_by_id($id);
     $is_edit = true;
 
     if ($product === null) {
-        $_SESSION['flash'] = ['type' => 'error', 'msg' => 'Product not found.'];
-        header('Location: /admin/dashboard.php');
+        flash_set('error', 'Product not found.');
+        header('Location: /admin/dashboard');
         exit;
     }
 }
 
-// Helpers for rendering the form
 $v = function (string $key, string $default = '') use ($product): string {
     if ($product === null) return $default;
     $val = $product[$key] ?? $default;
@@ -94,6 +81,15 @@ $v = function (string $key, string $default = '') use ($product): string {
 };
 
 $page_heading = $is_edit ? 'Edit Product' : 'Add New Product';
+
+function flash_set(string $type, string $msg): void {
+    setcookie('jwf_flash', json_encode(['type' => $type, 'msg' => $msg]), [
+        'expires'  => time() + 30,
+        'path'     => '/admin',
+        'samesite' => 'Strict',
+        'httponly' => true,
+    ]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -112,22 +108,18 @@ $page_heading = $is_edit ? 'Edit Product' : 'Add New Product';
 <main class="admin-main">
     <div class="admin-topbar">
         <h1 class="admin-page-title"><?= $page_heading ?></h1>
-        <a href="/admin/dashboard.php" class="btn btn-ghost">&larr; Back to Dashboard</a>
+        <a href="/admin/dashboard" class="btn btn-ghost">&larr; Back to Dashboard</a>
     </div>
 
     <?php if (!empty($errors)): ?>
         <div class="alert alert-error">
             <strong>Please fix the following:</strong>
-            <ul>
-                <?php foreach ($errors as $err): ?>
-                    <li><?= e($err) ?></li>
-                <?php endforeach; ?>
-            </ul>
+            <ul><?php foreach ($errors as $err): ?><li><?= e($err) ?></li><?php endforeach; ?></ul>
         </div>
     <?php endif; ?>
 
     <div class="admin-card">
-        <form method="POST" action="/admin/edit.php" class="product-form">
+        <form method="POST" action="/admin/edit" class="product-form">
             <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
             <?php if ($is_edit && $product): ?>
                 <input type="hidden" name="id" value="<?= (int)$product['id'] ?>">
@@ -135,13 +127,11 @@ $page_heading = $is_edit ? 'Edit Product' : 'Add New Product';
 
             <div class="form-grid">
 
-                <!-- Name -->
                 <div class="form-group form-group--full">
                     <label for="name">Product Name <span class="req">*</span></label>
                     <input type="text" id="name" name="name" required value="<?= $v('name') ?>" placeholder="e.g. Farmhouse Dining Table">
                 </div>
 
-                <!-- Category -->
                 <div class="form-group">
                     <label for="category">Category <span class="req">*</span></label>
                     <input type="text" id="category" name="category" required value="<?= $v('category') ?>" placeholder="e.g. Dining Tables" list="category-list">
@@ -155,35 +145,30 @@ $page_heading = $is_edit ? 'Edit Product' : 'Add New Product';
                     </datalist>
                 </div>
 
-                <!-- Price -->
                 <div class="form-group">
                     <label for="price">Price <span class="req">*</span></label>
                     <input type="text" id="price" name="price" required value="<?= $v('price') ?>" placeholder='e.g. $1,250 or "Contact for Quote"'>
                 </div>
 
-                <!-- Short description -->
                 <div class="form-group form-group--full">
                     <label for="short_description">Short Description <span class="req">*</span></label>
                     <input type="text" id="short_description" name="short_description" required value="<?= $v('short_description') ?>" placeholder="One-line summary shown on product cards">
                 </div>
 
-                <!-- Long description -->
                 <div class="form-group form-group--full">
                     <label for="long_description">Long Description</label>
-                    <textarea id="long_description" name="long_description" rows="6" placeholder="Detailed description shown on the product detail page"><?= $v('long_description') ?></textarea>
+                    <textarea id="long_description" name="long_description" rows="6" placeholder="Detailed description for the product detail page"><?= $v('long_description') ?></textarea>
                 </div>
 
-                <!-- Materials -->
                 <div class="form-group form-group--full">
                     <label for="materials">Materials <span class="field-hint">(comma-separated)</span></label>
                     <input type="text" id="materials" name="materials" value="<?= $v('materials') ?>" placeholder="e.g. White Oak, Linseed Oil Finish, Steel Hardware">
                 </div>
 
-                <!-- Image -->
                 <div class="form-group form-group--full">
                     <label for="image">Image <span class="req">*</span></label>
                     <input type="text" id="image" name="image" required value="<?= $v('image') ?>" placeholder="filename.jpg  or  https://example.com/image.jpg">
-                    <p class="field-note">Enter a filename (from assets/images/) or a full URL. If the file doesn't exist, a branded placeholder will be shown automatically.</p>
+                    <p class="field-note">Enter a filename (from assets/images/) or a full URL. A branded placeholder is shown automatically if the file is missing.</p>
                     <?php if ($product && !empty($product['image'])): ?>
                     <div class="image-preview">
                         <img src="<?= e(product_image_url($product['image'], 300, 200)) ?>" alt="Preview" width="300" height="200">
@@ -191,25 +176,23 @@ $page_heading = $is_edit ? 'Edit Product' : 'Add New Product';
                     <?php endif; ?>
                 </div>
 
-                <!-- Dimensions -->
                 <div class="form-group">
                     <label for="dimensions">Dimensions</label>
                     <input type="text" id="dimensions" name="dimensions" value="<?= $v('dimensions') ?>" placeholder='e.g. 72"L x 36"W x 30"H'>
                 </div>
 
-                <!-- Lead time -->
                 <div class="form-group">
                     <label for="lead_time">Lead Time</label>
                     <input type="text" id="lead_time" name="lead_time" value="<?= $v('lead_time') ?>" placeholder="e.g. 4–6 weeks">
                 </div>
 
-            </div><!-- /.form-grid -->
+            </div>
 
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary btn-lg">
                     <?= $is_edit ? 'Save Changes' : 'Add Product' ?>
                 </button>
-                <a href="/admin/dashboard.php" class="btn btn-ghost">Cancel</a>
+                <a href="/admin/dashboard" class="btn btn-ghost">Cancel</a>
             </div>
         </form>
     </div>

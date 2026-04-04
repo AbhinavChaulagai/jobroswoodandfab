@@ -1,9 +1,13 @@
 <?php
 /**
- * admin/logout.php — Destroy the admin session and redirect to login.
+ * admin/logout.php — Clear the auth cookie and redirect to login.
  */
-if (session_status() === PHP_SESSION_NONE) session_start();
-$_SESSION = [];
-session_destroy();
-header('Location: /admin/index.php');
+setcookie('jwf_admin', '', [
+    'expires'  => time() - 3600,
+    'path'     => '/admin',
+    'secure'   => true,
+    'httponly' => true,
+    'samesite' => 'Strict',
+]);
+header('Location: /admin/');
 exit;

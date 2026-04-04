@@ -1,32 +1,24 @@
 <?php
 /**
  * auth_check.php — Include at the top of every protected admin page.
- * Starts the session and redirects to login if the user is not authenticated.
+ * Redirects to login if the signed cookie is missing or invalid.
  */
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/auth_functions.php';
 
-if (empty($_SESSION['admin_logged_in'])) {
-    header('Location: /admin/index.php');
+$_cookie = $_COOKIE['jwf_admin'] ?? '';
+if (!$_cookie || !verify_admin_token($_cookie)) {
+    header('Location: /admin/');
     exit;
 }
 
-/**
- * Generate (or return existing) CSRF token stored in the session.
- */
+/** CSRF token derived from the auth cookie — no session needed. */
 function csrf_token(): string {
-    if (empty($_SESSION['csrf_token'])) {
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    }
-    return $_SESSION['csrf_token'];
+    $secret = getenv('ADMIN_PASSWORD') ?: 'admin123';
+    return hash_hmac('sha256', 'csrf:' . ($_COOKIE['jwf_admin'] ?? ''), $secret);
 }
 
-/**
- * Verify the CSRF token submitted with a POST form.
- * Kills the request with 403 if the token is missing or wrong.
- */
+/** Verify CSRF on POST. Exits 403 if invalid. */
 function verify_csrf(): void {
     $submitted = $_POST['csrf_token'] ?? '';
     if (!hash_equals(csrf_token(), $submitted)) {

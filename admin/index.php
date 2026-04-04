@@ -4,14 +4,13 @@
  *
  * Set your password via the ADMIN_PASSWORD environment variable in the
  * Vercel dashboard (Project → Settings → Environment Variables).
- * Default fallback password: admin123  ← CHANGE THIS before going live.
  */
 
-if (session_status() === PHP_SESSION_NONE) session_start();
+require_once __DIR__ . '/auth_functions.php'; // token helpers without auth check
 
 // Already logged in — go straight to dashboard
-if (!empty($_SESSION['admin_logged_in'])) {
-    header('Location: /admin/dashboard.php');
+if (!empty($_COOKIE['jwf_admin']) && verify_admin_token($_COOKIE['jwf_admin'])) {
+    header('Location: /admin/dashboard');
     exit;
 }
 
@@ -22,14 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $submitted      = $_POST['password'] ?? '';
 
     if ($submitted !== '' && hash_equals($admin_password, $submitted)) {
-        session_regenerate_id(true);
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['admin_login_time'] = time();
-        header('Location: /admin/dashboard.php');
+        // Set signed cookie — no session needed
+        $token = make_admin_token();
+        setcookie('jwf_admin', $token, [
+            'expires'  => time() + 604800, // 7 days
+            'path'     => '/admin',
+            'secure'   => true,
+            'httponly' => true,
+            'samesite' => 'Strict',
+        ]);
+        header('Location: /admin/dashboard');
         exit;
     } else {
-        // Small delay to slow brute-force attempts
-        sleep(1);
+        sleep(1); // slow brute force
         $error = 'Incorrect password. Please try again.';
     }
 }
@@ -56,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
     <?php endif; ?>
 
-    <form method="POST" action="/admin/index.php" class="login-form">
+    <form method="POST" action="/admin/" class="login-form">
         <div class="form-group">
             <label for="password">Admin Password</label>
             <input

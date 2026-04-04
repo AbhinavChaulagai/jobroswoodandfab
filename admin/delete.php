@@ -1,13 +1,12 @@
 <?php
 /**
- * admin/delete.php — Delete a product by ID.
- * Accepts POST only. Redirects back to dashboard with a flash message.
+ * admin/delete.php — Delete a product by ID. POST only.
  */
 require_once __DIR__ . '/auth_check.php';
 require_once __DIR__ . '/../includes/functions.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: /admin/dashboard.php');
+    header('Location: /admin/dashboard');
     exit;
 }
 
@@ -18,26 +17,32 @@ $products = get_all_products();
 
 $target = null;
 foreach ($products as $p) {
-    if ((int)$p['id'] === $id) {
-        $target = $p;
-        break;
-    }
+    if ((int)$p['id'] === $id) { $target = $p; break; }
 }
 
 if ($target === null) {
-    $_SESSION['flash'] = ['type' => 'error', 'msg' => 'Product not found.'];
-    header('Location: /admin/dashboard.php');
+    flash_set('error', 'Product not found.');
+    header('Location: /admin/dashboard');
     exit;
 }
 
-// Remove the product
 $updated = array_values(array_filter($products, fn($p) => (int)$p['id'] !== $id));
 
 if (save_products($updated)) {
-    $_SESSION['flash'] = ['type' => 'success', 'msg' => "Product \"{$target['name']}\" deleted."];
+    flash_set('success', "Product \"{$target['name']}\" deleted.");
 } else {
-    $_SESSION['flash'] = ['type' => 'error', 'msg' => 'Failed to save products.json — check file permissions.'];
+    flash_set('error', 'Failed to save — check file permissions.');
 }
 
-header('Location: /admin/dashboard.php');
+header('Location: /admin/dashboard');
 exit;
+
+/** Store a one-time flash message in a short-lived cookie. */
+function flash_set(string $type, string $msg): void {
+    setcookie('jwf_flash', json_encode(['type' => $type, 'msg' => $msg]), [
+        'expires'  => time() + 30,
+        'path'     => '/admin',
+        'samesite' => 'Strict',
+        'httponly' => true,
+    ]);
+}
