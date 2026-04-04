@@ -4,34 +4,12 @@
       "runtime": "vercel-php@0.7.2"
     }
   },
-  "routes": [
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/api/contact",
-      "dest": "/api/contact.php"
-    },
-    {
-      "src": "/api/contact.php",
-      "dest": "/api/contact.php"
-    },
-    {
-      "src": "/(index|products|product|about|contact)\\.php",
-      "dest": "/$1.php"
-    },
-    {
-      "src": "/(index|products|product|about|contact)",
-      "dest": "/$1.php"
-    },
-    {
-      "src": "/",
-      "dest": "/index.php"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.php"
-    }
+  "rewrites": [
+    { "source": "/api/contact",  "destination": "/api/contact.php" },
+    { "source": "/products",     "destination": "/products.php" },
+    { "source": "/product",      "destination": "/product.php" },
+    { "source": "/about",        "destination": "/about.php" },
+    { "source": "/contact",      "destination": "/contact.php" },
+    { "source": "/",             "destination": "/index.php" }
   ]
 }
