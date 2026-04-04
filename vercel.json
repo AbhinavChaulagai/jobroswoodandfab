@@ -1,18 +1,28 @@
 {
   "version": 2,
   "builds": [
-    { "src": "*.php",        "use": "vercel-php@0.7.2" },
-    { "src": "api/*.php",    "use": "vercel-php@0.7.2" },
-    { "src": "assets/**/*", "use": "@vercel/static" }
+    { "src": "*.php",              "use": "vercel-php@0.7.2" },
+    { "src": "api/*.php",          "use": "vercel-php@0.7.2" },
+    { "src": "admin/*.php",        "use": "vercel-php@0.7.2" },
+    { "src": "admin/partials/*.php","use": "vercel-php@0.7.2" },
+    { "src": "assets/**/*",        "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/api/contact", "dest": "/api/contact.php" },
-    { "src": "/products",    "dest": "/products.php" },
-    { "src": "/product",     "dest": "/product.php" },
-    { "src": "/about",       "dest": "/about.php" },
-    { "src": "/contact",     "dest": "/contact.php" },
-    { "src": "/",            "dest": "/index.php" },
-    { "src": "/(.*)",        "dest": "/index.php" }
+    { "src": "/assets/(.*)",              "dest": "/assets/$1" },
+    { "src": "/api/contact",              "dest": "/api/contact.php" },
+    { "src": "/admin",                    "dest": "/admin/index.php" },
+    { "src": "/admin/",                   "dest": "/admin/index.php" },
+    { "src": "/admin/dashboard",          "dest": "/admin/dashboard.php" },
+    { "src": "/admin/edit",               "dest": "/admin/edit.php" },
+    { "src": "/admin/delete",             "dest": "/admin/delete.php" },
+    { "src": "/admin/submissions",        "dest": "/admin/submissions.php" },
+    { "src": "/admin/logout",             "dest": "/admin/logout.php" },
+    { "src": "/admin/(.*)\\.php",         "dest": "/admin/$1.php" },
+    { "src": "/products",                 "dest": "/products.php" },
+    { "src": "/product",                  "dest": "/product.php" },
+    { "src": "/about",                    "dest": "/about.php" },
+    { "src": "/contact",                  "dest": "/contact.php" },
+    { "src": "/",                         "dest": "/index.php" },
+    { "src": "/(.*)",                     "dest": "/index.php" }
   ]
 }

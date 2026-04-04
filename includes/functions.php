@@ -60,14 +60,37 @@ function e(string $str): string {
 /**
  * Build the URL for a product image. Falls back to a placeholder if the image
  * file doesn't exist in assets/images/.
+ * Also accepts fully-qualified URLs (http/https) and returns them as-is.
  */
 function product_image_url(string $filename, int $width = 600, int $height = 450): string {
+    // If a full URL was stored, use it directly
+    if (str_starts_with($filename, 'http://') || str_starts_with($filename, 'https://')) {
+        return $filename;
+    }
     $local = __DIR__ . '/../assets/images/' . $filename;
     if (file_exists($local)) {
         return '/assets/images/' . $filename;
     }
     // Use placehold.co as a placeholder — brown/cream palette fits the brand
     return "https://placehold.co/{$width}x{$height}/8B6343/F5ECD7?text=" . rawurlencode(pathinfo($filename, PATHINFO_FILENAME));
+}
+
+/**
+ * Save the full products array back to the JSON file.
+ * Returns true on success, false on failure.
+ */
+function save_products(array $products): bool {
+    $path = __DIR__ . '/../data/products.json';
+    $json = json_encode(array_values($products), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    return file_put_contents($path, $json, LOCK_EX) !== false;
+}
+
+/**
+ * Return the next available integer product ID.
+ */
+function next_product_id(array $products): int {
+    if (empty($products)) return 1;
+    return max(array_column($products, 'id')) + 1;
 }
 
 /**
