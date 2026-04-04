@@ -1,102 +1,100 @@
 <?php
 /**
- * products.php — Full product grid with category filter.
+ * products.php — Product listing page with category filter.
  */
 require_once __DIR__ . '/includes/functions.php';
 
-$page_title       = 'Products';
-$meta_description = 'Browse all custom wood furniture from Jobros Wood & Fab — dining tables, coffee tables, benches, bed frames, shelving, and side tables.';
+$page_title       = 'Our Products';
+$meta_description = 'Browse all custom wood furniture — dining tables, coffee tables, benches, bed frames, shelving, and side tables.';
 
 $all_products = get_all_products();
 $categories   = get_all_categories();
 
-// Category filter from query string (optional)
-$active_category = isset($_GET['category']) ? trim($_GET['category']) : '';
-
-// Apply filter
-if ($active_category !== '') {
-    $display_products = get_products_by_category($active_category);
-} else {
-    $display_products = $all_products;
-}
+$active_cat       = trim($_GET['category'] ?? '');
+$display_products = $active_cat !== '' ? get_products_by_category($active_cat) : $all_products;
 
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<!-- ===================== PAGE BANNER ===================== -->
-<section class="page-banner" aria-label="Page title">
+<!-- Page banner -->
+<section class="page-banner">
     <div class="container">
         <h1 class="page-banner-title">Our Products</h1>
-        <p class="page-banner-sub">Every piece is made to order — these are examples of what we build.</p>
+        <p class="page-banner-sub">Every piece is made to order. These are examples of what we build.</p>
     </div>
 </section>
 
-<!-- ===================== CATEGORY FILTER ===================== -->
-<section class="filter-bar" aria-label="Filter products by category">
+<!-- Category filter -->
+<div class="filter-bar">
     <div class="container filter-bar-inner">
-        <a
-            href="/products.php"
-            class="filter-btn <?= $active_category === '' ? 'active' : '' ?>"
-        >All</a>
+        <a href="/products" class="filter-btn <?= $active_cat === '' ? 'active' : '' ?>">All</a>
         <?php foreach ($categories as $cat): ?>
-        <a
-            href="/products.php?category=<?= rawurlencode($cat) ?>"
-            class="filter-btn <?= $active_category === $cat ? 'active' : '' ?>"
-        ><?= e($cat) ?></a>
+        <a href="/products?category=<?= rawurlencode($cat) ?>"
+           class="filter-btn <?= $active_cat === $cat ? 'active' : '' ?>">
+            <?= htmlspecialchars($cat) ?>
+        </a>
         <?php endforeach; ?>
     </div>
-</section>
+</div>
 
-<!-- ===================== PRODUCT GRID ===================== -->
-<section class="section products-section" aria-label="Product list">
+<!-- Product grid -->
+<section class="section products-section">
     <div class="container">
 
         <?php if (empty($display_products)): ?>
-            <p class="empty-message">No products found in that category. <a href="/products.php">View all</a>.</p>
+            <p class="empty-message">No products in this category. <a href="/products">View all</a>.</p>
         <?php else: ?>
+
         <p class="results-count">
-            <?php if ($active_category !== ''): ?>
-                Showing <?= count($display_products) ?> product<?= count($display_products) !== 1 ? 's' : '' ?> in <strong><?= e($active_category) ?></strong>
+            <?php if ($active_cat): ?>
+                Showing <?= count($display_products) ?> in <strong><?= htmlspecialchars($active_cat) ?></strong>
             <?php else: ?>
                 Showing all <?= count($display_products) ?> products
             <?php endif; ?>
         </p>
 
         <div class="product-grid product-grid--large">
-            <?php foreach ($display_products as $product): ?>
+            <?php foreach ($display_products as $p): ?>
             <article class="product-card">
-                <a href="/product.php?id=<?= (int)$product['id'] ?>" class="product-card-link" aria-label="View <?= e($product['name']) ?>">
+                <a href="/product?id=<?= (int)$p['id'] ?>" class="product-card-link">
+
                     <div class="product-card-img-wrap">
                         <img
-                            src="<?= e(get_primary_image($product, 600, 450)) ?>"
-                            alt="<?= e($product['name']) ?>"
-                            loading="lazy"
-                            width="600"
-                            height="450"
+                            src="<?= htmlspecialchars(get_primary_image($p, 600, 450)) ?>"
+                            alt="<?= htmlspecialchars($p['name']) ?>"
+                            loading="lazy" width="600" height="450"
                         >
+                        <?php $imgCount = count(get_product_images($p));
+                              if ($imgCount > 1): ?>
+                        <span class="img-count-pill"><?= $imgCount ?> photos</span>
+                        <?php endif; ?>
                     </div>
+
                     <div class="product-card-body">
-                        <span class="product-card-category"><?= e($product['category']) ?></span>
-                        <h2 class="product-card-title"><?= e($product['name']) ?></h2>
-                        <p class="product-card-desc"><?= e($product['short_description']) ?></p>
-                        <p class="product-card-price"><?= e($product['price']) ?></p>
-                        <span class="btn btn-sm btn-outline">View Details &rarr;</span>
+                        <span class="product-card-category"><?= htmlspecialchars($p['category']) ?></span>
+                        <h2 class="product-card-title"><?= htmlspecialchars($p['name']) ?></h2>
+                        <p class="product-card-desc"><?= htmlspecialchars($p['short_description']) ?></p>
+                        <div class="product-card-footer">
+                            <span class="product-card-price"><?= htmlspecialchars($p['price']) ?></span>
+                            <span class="btn btn-sm btn-outline">View Details →</span>
+                        </div>
                     </div>
+
                 </a>
             </article>
             <?php endforeach; ?>
         </div>
-        <?php endif; ?>
 
+        <?php endif; ?>
     </div>
 </section>
 
-<!-- ===================== CUSTOM ORDER PROMPT ===================== -->
-<section class="cta-banner" aria-labelledby="products-cta-heading">
+<!-- CTA -->
+<section class="cta-banner">
     <div class="container cta-banner-inner">
-        <h2 id="products-cta-heading">Don't see exactly what you need?</h2>
-        <p>We build fully custom pieces. Bring us your idea and we'll price it out for free.</p>
-        <a href="/contact.php" class="btn btn-primary btn-lg">Request Custom Piece</a>
+        <h2>Don't see exactly what you need?</h2>
+        <p>We build fully custom pieces. Describe your idea and we'll price it for free.</p>
+        <a href="/contact" class="btn btn-primary btn-lg">Request a Custom Piece</a>
     </div>
 </section>
 

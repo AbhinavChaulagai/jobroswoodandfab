@@ -182,56 +182,50 @@
 
 
 /* ==========================================================================
-   4. Product Image Gallery
+   4. Product Image Gallery (product.php)
    ========================================================================== */
-(function initGallery() {
-    const mainImg = document.getElementById('galleryMain');
-    const thumbs  = document.querySelectorAll('.gallery-thumb');
-    const prevBtn = document.getElementById('galleryPrev');
-    const nextBtn = document.getElementById('galleryNext');
-    const images  = window.GALLERY_IMAGES || [];
+(function () {
+    var mainImg = document.getElementById('galleryMain');
+    var thumbs  = document.querySelectorAll('.g-thumb');
+    var prev    = document.getElementById('gPrev');
+    var next    = document.getElementById('gNext');
+    var gallery = window.GALLERY || [];
 
-    if (!mainImg || !images.length) return;
+    if (!mainImg || gallery.length === 0) return;
 
-    let current = 0;
+    var cur = 0;
+    mainImg.style.transition = 'opacity 0.15s ease';
 
-    function goTo(idx) {
-        current = (idx + images.length) % images.length;
-        // Fade swap
+    function goTo(n) {
+        cur = (n + gallery.length) % gallery.length;
         mainImg.style.opacity = '0';
         setTimeout(function () {
-            mainImg.src = images[current];
+            mainImg.src = gallery[cur];
             mainImg.style.opacity = '1';
         }, 150);
         thumbs.forEach(function (t, i) {
-            t.classList.toggle('active', i === current);
+            t.classList.toggle('active', i === cur);
         });
     }
 
-    thumbs.forEach(function (btn, i) {
-        btn.addEventListener('click', function () { goTo(i); });
+    thumbs.forEach(function (t, i) {
+        t.addEventListener('click', function () { goTo(i); });
     });
+    if (prev) prev.addEventListener('click', function () { goTo(cur - 1); });
+    if (next) next.addEventListener('click', function () { goTo(cur + 1); });
 
-    if (prevBtn) prevBtn.addEventListener('click', function () { goTo(current - 1); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { goTo(current + 1); });
-
-    // Keyboard navigation
+    // Keyboard
     document.addEventListener('keydown', function (e) {
-        if (!document.getElementById('productGallery')) return;
-        if (e.key === 'ArrowLeft')  goTo(current - 1);
-        if (e.key === 'ArrowRight') goTo(current + 1);
+        if (!document.getElementById('gallery')) return;
+        if (e.key === 'ArrowLeft')  goTo(cur - 1);
+        if (e.key === 'ArrowRight') goTo(cur + 1);
     });
 
     // Touch swipe
-    let touchStartX = 0;
-    mainImg.addEventListener('touchstart', function (e) {
-        touchStartX = e.touches[0].clientX;
+    var tx = 0;
+    mainImg.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    mainImg.addEventListener('touchend',   function (e) {
+        var d = e.changedTouches[0].clientX - tx;
+        if (Math.abs(d) > 50) goTo(cur + (d < 0 ? 1 : -1));
     }, { passive: true });
-    mainImg.addEventListener('touchend', function (e) {
-        const delta = e.changedTouches[0].clientX - touchStartX;
-        if (Math.abs(delta) > 50) goTo(current + (delta < 0 ? 1 : -1));
-    }, { passive: true });
-
-    // Smooth opacity transition style
-    mainImg.style.transition = 'opacity 0.15s ease';
 })();
