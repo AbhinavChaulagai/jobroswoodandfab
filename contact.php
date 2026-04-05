@@ -35,7 +35,7 @@ require_once __DIR__ . '/includes/header.php';
             <form
                 id="contactForm"
                 class="contact-form"
-                action="/api/contact.php"
+                action="/api/contact"
                 method="POST"
                 novalidate
             >
@@ -117,17 +117,20 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="contact-info-block">
                 <h3>Email</h3>
+                <!-- TODO: replace with your real email -->
                 <p><a href="mailto:hello@jobroswoodandfab.com">hello@jobroswoodandfab.com</a></p>
             </div>
 
             <div class="contact-info-block">
                 <h3>Phone</h3>
+                <!-- TODO: replace with your real phone number -->
                 <p><a href="tel:+15555550100">(555) 555-0100</a></p>
-                <p class="contact-hours">Mon–Fri, 8 am – 5 pm PT</p>
+                <p class="contact-hours">Mon–Fri, 8 am – 5 pm</p>
             </div>
 
             <div class="contact-info-block">
                 <h3>Workshop</h3>
+                <!-- TODO: replace with your city/state -->
                 <address>
                     <p>Pacific Northwest, USA</p>
                     <p><em>By appointment only</em></p>
@@ -137,17 +140,6 @@ require_once __DIR__ . '/includes/header.php';
             <div class="contact-info-block">
                 <h3>Response Time</h3>
                 <p>We respond to all inquiries within one business day. For urgent requests, please call.</p>
-            </div>
-
-            <!-- Placeholder map image -->
-            <div class="contact-map-placeholder" aria-hidden="true">
-                <img
-                    src="https://placehold.co/400x250/8B6343/F5ECD7?text=Pacific+Northwest"
-                    alt="Map placeholder"
-                    width="400"
-                    height="250"
-                    loading="lazy"
-                >
             </div>
         </aside>
 

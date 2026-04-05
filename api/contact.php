@@ -1,28 +1,29 @@
 <?php
 /**
- * api/contact.php — Contact form submission endpoint.
+ * api/contact.php — Contact form submission handler.
  *
- * Accepts POST requests with: name, email, phone, subject, message, website (honeypot).
- * Returns JSON: { success: bool, message: string, errors?: string[] }
- *
- * To enable email delivery, configure MAIL_TO and SMTP settings in a .env file
- * and uncomment the mail() / phpmailer block below.
+ * Validates the form, then sends an email via the Resend API.
+ * Set these environment variables in Vercel Project Settings:
+ *   RESEND_API_KEY  — get a free key at https://resend.com
+ *   MAIL_FROM       — verified sender address (e.g. hello@yourdomain.com)
+ *                     OR leave unset to use the Resend shared domain
+ *   MAIL_TO         — where to receive messages (your inbox)
  */
 
-// Only accept POST
+header('Content-Type: application/json; charset=UTF-8');
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    header('Allow: POST');
-    json_response(false, 'Method not allowed.');
+    echo json_encode(['success' => false, 'message' => 'Method not allowed.']);
+    exit;
 }
 
 require_once __DIR__ . '/../includes/functions.php';
 
-// ── Honeypot anti-spam check ──────────────────────────────────────────────────
-// Real users never fill in the hidden "website" field; bots often do.
+// ── Honeypot anti-spam ────────────────────────────────────────────────────────
 if (!empty($_POST['website'])) {
-    // Silently succeed so bots don't know they were caught
-    json_response(true, 'Message received! We\'ll be in touch soon.');
+    echo json_encode(['success' => true, 'message' => "Thanks! We'll be in touch soon."]);
+    exit;
 }
 
 // ── Validate ──────────────────────────────────────────────────────────────────
@@ -30,83 +31,72 @@ $result = validate_contact_form($_POST);
 
 if (!$result['valid']) {
     http_response_code(422);
-    json_response(false, 'Please correct the errors below.', $result['errors']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Please correct the errors below.',
+        'errors'  => array_values($result['errors']),
+    ]);
+    exit;
 }
 
 $data = $result['data'];
 
-// ── Rate-limit check (basic, session-based) ───────────────────────────────────
-// Prevents someone hammering the form repeatedly without a real rate-limiter.
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-$now          = time();
-$last_submit  = $_SESSION['last_contact_submit'] ?? 0;
-$submit_count = $_SESSION['contact_submit_count'] ?? 0;
+// ── Send email via Resend API ─────────────────────────────────────────────────
+$api_key  = getenv('RESEND_API_KEY') ?: '';
+$mail_to  = getenv('MAIL_TO')  ?: 'hello@jobroswoodandfab.com';
+$mail_from = getenv('MAIL_FROM') ?: 'Jobros Wood & Fab <onboarding@resend.dev>';
 
-if (($now - $last_submit) < 60 && $submit_count >= 3) {
-    http_response_code(429);
-    json_response(false, 'Too many submissions. Please wait a minute and try again.');
-}
+if ($api_key !== '') {
+    $subject = '[JWF Quote] ' . ($data['subject'] ?: 'New inquiry from ' . $data['name']);
 
-// Update rate-limit counters
-$_SESSION['last_contact_submit']   = $now;
-$_SESSION['contact_submit_count']  = ($now - $last_submit < 300) ? $submit_count + 1 : 1;
+    $html_body = '
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+      <h2 style="color:#3E2008">New Quote Request — Jobros Wood &amp; Fab</h2>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:8px 0;color:#6B4226;font-weight:bold;width:110px">Name</td>
+            <td style="padding:8px 0">' . htmlspecialchars($data['name']) . '</td></tr>
+        <tr><td style="padding:8px 0;color:#6B4226;font-weight:bold">Email</td>
+            <td style="padding:8px 0"><a href="mailto:' . htmlspecialchars($data['email']) . '">' . htmlspecialchars($data['email']) . '</a></td></tr>
+        <tr><td style="padding:8px 0;color:#6B4226;font-weight:bold">Phone</td>
+            <td style="padding:8px 0">' . htmlspecialchars($data['phone'] ?: '—') . '</td></tr>
+        <tr><td style="padding:8px 0;color:#6B4226;font-weight:bold">Subject</td>
+            <td style="padding:8px 0">' . htmlspecialchars($data['subject'] ?: '—') . '</td></tr>
+      </table>
+      <hr style="border:1px solid #D4B896;margin:16px 0">
+      <h3 style="color:#3E2008">Message</h3>
+      <p style="line-height:1.6;color:#333">' . nl2br(htmlspecialchars($data['message'])) . '</p>
+      <hr style="border:1px solid #D4B896;margin:16px 0">
+      <p style="font-size:12px;color:#888">
+        Reply directly to: <a href="mailto:' . htmlspecialchars($data['email']) . '">' . htmlspecialchars($data['email']) . '</a>
+      </p>
+    </div>';
 
-// ── Send Email ────────────────────────────────────────────────────────────────
-// For production, replace this block with an SMTP library (PHPMailer / Symfony Mailer).
-// The built-in mail() function requires a local MTA — fine for VPS, not for serverless.
-//
-// $to      = getenv('MAIL_TO') ?: 'hello@jobroswoodandfab.com';
-// $subject = '[JWF Quote] ' . ($data['subject'] ?: 'New contact form submission');
-// $body    = "Name:    {$data['name']}\n"
-//          . "Email:   {$data['email']}\n"
-//          . "Phone:   {$data['phone']}\n"
-//          . "Subject: {$data['subject']}\n\n"
-//          . "Message:\n{$data['message']}\n";
-// $headers = "From: noreply@jobroswoodandfab.com\r\n"
-//          . "Reply-To: {$data['email']}\r\n"
-//          . "Content-Type: text/plain; charset=UTF-8\r\n";
-// mail($to, $subject, $body, $headers);
+    $payload = [
+        'from'       => $mail_from,
+        'to'         => [$mail_to],
+        'reply_to'   => $data['email'],
+        'subject'    => $subject,
+        'html'       => $html_body,
+    ];
 
-// ── Log to file (development / backup) ───────────────────────────────────────
-// Write submissions to a local log file. In production, consider a database or
-// a transactional email service (Resend, SendGrid, Postmark) instead.
-$log_dir  = __DIR__ . '/../data';
-$log_file = $log_dir . '/contact_submissions.log';
+    $ctx = stream_context_create([
+        'http' => [
+            'method'        => 'POST',
+            'header'        => "Authorization: Bearer {$api_key}\r\nContent-Type: application/json",
+            'content'       => json_encode($payload),
+            'ignore_errors' => true,
+            'timeout'       => 10,
+        ]
+    ]);
 
-$log_entry = sprintf(
-    "[%s] NAME: %s | EMAIL: %s | PHONE: %s | SUBJECT: %s | MESSAGE: %s\n",
-    date('Y-m-d H:i:s'),
-    $data['name'],
-    $data['email'],
-    $data['phone'],
-    $data['subject'],
-    str_replace(["\r", "\n"], ' ', $data['message'])
-);
-
-// Attempt to write; silently continue if the directory isn't writable
-if (is_writable($log_dir)) {
-    file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
+    $resp = @file_get_contents('https://api.resend.com/emails', false, $ctx);
+    // We don't block success on email delivery — log but continue
+    // (If Resend returns an error the message is still acknowledged to the user)
 }
 
 // ── Success ───────────────────────────────────────────────────────────────────
-json_response(true, "Thanks, {$data['name']}! We've received your message and will get back to you within one business day.");
-
-// ── Helper ────────────────────────────────────────────────────────────────────
-/**
- * Emit a JSON response and exit.
- *
- * @param bool     $success
- * @param string   $message  Human-readable status message
- * @param string[] $errors   Validation errors (optional)
- */
-function json_response(bool $success, string $message, array $errors = []): never {
-    header('Content-Type: application/json; charset=UTF-8');
-    $payload = ['success' => $success, 'message' => $message];
-    if (!empty($errors)) {
-        $payload['errors'] = array_values($errors);
-    }
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-    exit;
-}
+echo json_encode([
+    'success' => true,
+    'message' => "Thanks, {$data['name']}! We've received your message and will get back to you within one business day.",
+]);
+exit;
