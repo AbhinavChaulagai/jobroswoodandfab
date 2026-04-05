@@ -117,12 +117,12 @@
         "lead_time": "3–4 weeks"
     },
     {
-        "id": 8,
-        "name": "Desk",
-        "category": "Side Tables",
-        "short_description": "Desk",
-        "long_description": "",
-        "price": "$295",
+        "id": 7,
+        "name": "Pot Holder",
+        "category": "Dining Tables",
+        "short_description": "Pot",
+        "long_description": "Pot",
+        "price": "%89",
         "materials": [],
         "images": [],
         "image": "",
