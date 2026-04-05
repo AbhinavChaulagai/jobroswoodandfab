@@ -121,7 +121,14 @@ function save_products(array $products): bool {
         return _github_put_products($products, $token, $repo, $branch);
     }
 
-    // Local fallback (works in dev; fails on Vercel – see env vars above).
+    // On Vercel the Lambda filesystem is non-persistent — writes "succeed" but
+    // are thrown away between requests. Fail loudly so the admin sees an error
+    // instead of a ghost save.
+    if (getenv('VERCEL') || getenv('VERCEL_ENV')) {
+        return false; // force the "set GITHUB_TOKEN" error to appear
+    }
+
+    // Local development fallback.
     $path = __DIR__ . '/../data/products.json';
     $json = json_encode(array_values($products), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     return file_put_contents($path, $json, LOCK_EX) !== false;
@@ -148,6 +155,7 @@ function _github_put_products(array $products, string $token, string $repo, stri
         'method'        => 'GET',
         'header'        => $auth_headers,
         'ignore_errors' => true,
+        'timeout'       => 8,
     ]]);
     $get_resp = @file_get_contents("{$api_base}?ref={$branch}", false, $get_ctx);
     $sha      = null;
@@ -171,6 +179,7 @@ function _github_put_products(array $products, string $token, string $repo, stri
         'header'        => $auth_headers,
         'content'       => json_encode($body),
         'ignore_errors' => true,
+        'timeout'       => 8,
     ]]);
     $put_resp = @file_get_contents($api_base, false, $put_ctx);
     if ($put_resp === false) return false;
