@@ -115,18 +115,5 @@
         "image": "IMG_0757.JPG",
         "dimensions": "18\"W x 18\"D x 24\"H",
         "lead_time": "3–4 weeks"
-    },
-    {
-        "id": 7,
-        "name": "Pot Holder",
-        "category": "Dining Tables",
-        "short_description": "Pot",
-        "long_description": "Pot",
-        "price": "%89",
-        "materials": [],
-        "images": [],
-        "image": "",
-        "dimensions": "",
-        "lead_time": ""
     }
 ]
