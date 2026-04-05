@@ -128,5 +128,18 @@
         "image": "",
         "dimensions": "",
         "lead_time": ""
+    },
+    {
+        "id": 8,
+        "name": "Desk",
+        "category": "Side Tables",
+        "short_description": "Desk",
+        "long_description": "",
+        "price": "$295",
+        "materials": [],
+        "images": [],
+        "image": "",
+        "dimensions": "",
+        "lead_time": ""
     }
 ]
