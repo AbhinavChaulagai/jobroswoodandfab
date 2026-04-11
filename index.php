@@ -16,6 +16,9 @@ require_once __DIR__ . '/includes/header.php';
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" aria-label="Hero banner">
+    <video class="hero-video" autoplay muted loop playsinline aria-hidden="true">
+        <source src="/assets/video/Home_Page.mp4" type="video/mp4">
+    </video>
     <div class="hero-overlay"></div>
     <div class="container hero-content">
         <p class="hero-eyebrow">Handcrafted in the Pacific Northwest</p>
@@ -106,7 +109,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="container about-blurb-inner">
         <div class="about-blurb-img">
             <img
-                src="https://placehold.co/640x480/6B4226/F5ECD7?text=The+Shop"
+                src="/assets/images/Shop.jpg"
                 alt="Inside the Jobros Wood & Fab workshop"
                 loading="lazy"
                 width="640"
