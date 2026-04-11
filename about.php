@@ -31,7 +31,7 @@ require_once __DIR__ . '/includes/header.php';
 
         <div class="about-story-img">
             <img
-                src="https://placehold.co/640x480/6B4226/F5ECD7?text=The+Beginning"
+                src="/assets/images/Shop.jpg"
                 alt="Early days of the Jobros workshop"
                 loading="lazy"
                 width="640"
