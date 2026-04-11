@@ -117,14 +117,13 @@ require_once __DIR__ . '/includes/header.php';
 
             <div class="contact-info-block">
                 <h3>Email</h3>
-                <!-- TODO: replace with your real email -->
-                <p><a href="mailto:hello@jobroswoodandfab.com">hello@jobroswoodandfab.com</a></p>
+                <p><a href="mailto:jobroswoodandfab@gmail.com">jobroswoodandfab@gmail.com</a></p>
             </div>
 
             <div class="contact-info-block">
                 <h3>Phone</h3>
-                <!-- TODO: replace with your real phone number -->
-                <p><a href="tel:+15555550100">(555) 555-0100</a></p>
+                <p><a href="tel:+15154998920">(515) 499-8920</a></p>
+                <p><a href="tel:+15156571983">(515) 657-1983</a></p>
                 <p class="contact-hours">Mon–Fri, 8 am – 5 pm</p>
             </div>
 
