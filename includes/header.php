@@ -13,6 +13,8 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= isset($meta_description) ? e($meta_description) : 'Jobros Wood &amp; Fab — handcrafted custom wood furniture built to last generations.' ?>">
     <title><?= $page_title ?></title>
+    <link rel="icon" type="image/png" href="/assets/images/logo.png">
+    <link rel="apple-touch-icon" href="/assets/images/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -24,11 +26,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
     <div class="container header-inner">
 
         <a href="/" class="logo" aria-label="<?= $site_name ?> — Home">
-            <span class="logo-icon" aria-hidden="true">&#9776;</span>
-            <span class="logo-text">
-                <span class="logo-name">Jobros</span>
-                <span class="logo-sub">Wood &amp; Fab</span>
-            </span>
+            <img src="/assets/images/logo.png" alt="Jobros Wood &amp; Fab" class="logo-img">
         </a>
 
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primaryNav">

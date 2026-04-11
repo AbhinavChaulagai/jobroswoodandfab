@@ -16,9 +16,6 @@ require_once __DIR__ . '/includes/header.php';
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" aria-label="Hero banner">
-    <video class="hero-video" autoplay muted loop playsinline aria-hidden="true">
-        <source src="/assets/video/Home_Page.mp4" type="video/mp4">
-    </video>
     <div class="hero-overlay"></div>
     <div class="container hero-content">
         <p class="hero-eyebrow">Handcrafted in the Pacific Northwest</p>
