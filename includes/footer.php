@@ -32,7 +32,8 @@
             <h3 class="footer-heading">Get in Touch</h3>
             <address>
                 <p><a href="mailto:hello@jobroswoodandfab.com">hello@jobroswoodandfab.com</a></p>
-                <p><a href="tel:+15555550100">(555) 555-0100</a></p>
+                <p><a href="tel:+15154998920">(515) 499-8920</a></p>
+                <p><a href="tel:+15156571983">(515) 657-1983</a></p>
                 <p>Locally made in the Pacific Northwest</p>
             </address>
         </div>
