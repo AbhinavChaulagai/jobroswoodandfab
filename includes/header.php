@@ -26,7 +26,11 @@ $current_page = basename($_SERVER['SCRIPT_NAME'], '.php');
     <div class="container header-inner">
 
         <a href="/" class="logo" aria-label="<?= $site_name ?> — Home">
-            <img src="/assets/images/logo.png" alt="Jobros Wood &amp; Fab" class="logo-img">
+            <img src="/assets/images/logo.png" alt="Jobros Wood &amp; Fab logo" class="logo-img">
+            <span class="logo-text">
+                <span class="logo-name">Jobros</span>
+                <span class="logo-sub">Wood &amp; Fab</span>
+            </span>
         </a>
 
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primaryNav">

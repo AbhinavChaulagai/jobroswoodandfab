@@ -355,7 +355,9 @@ strong { font-weight: 700; }
 .logo {
     display: flex;
     align-items: center;
+    gap: var(--space-3);
     text-decoration: none;
+    color: var(--clr-cream);
     flex-shrink: 0;
 }
 
@@ -364,9 +366,32 @@ strong { font-weight: 700; }
 }
 
 .logo-img {
-    height: 52px;
+    height: 48px;
     width: auto;
     display: block;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+}
+
+.logo-name {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    color: var(--clr-cream);
+    letter-spacing: 0.02em;
+}
+
+.logo-sub {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--clr-tan);
 }
 
 /* Nav */
