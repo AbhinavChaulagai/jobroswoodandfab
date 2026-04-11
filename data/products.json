@@ -126,8 +126,10 @@
         "materials": [
             "White Oak"
         ],
-        "images": [],
-        "image": "",
+        "images": [
+            "https://ibb.co/391p1YDY"
+        ],
+        "image": "https://ibb.co/391p1YDY",
         "dimensions": "",
         "lead_time": ""
     }
