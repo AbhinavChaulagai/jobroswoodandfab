@@ -4,7 +4,7 @@
  */
 setcookie('jwf_admin', '', [
     'expires'  => time() - 3600,
-    'path'     => '/admin',
+    'path'     => '/',
     'secure'   => true,
     'httponly' => true,
     'samesite' => 'Strict',

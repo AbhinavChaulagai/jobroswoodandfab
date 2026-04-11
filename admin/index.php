@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $token = make_admin_token();
         setcookie('jwf_admin', $token, [
             'expires'  => time() + 604800, // 7 days
-            'path'     => '/admin',
+            'path'     => '/',
             'secure'   => true,
             'httponly' => true,
             'samesite' => 'Strict',
