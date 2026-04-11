@@ -1,11 +1,35 @@
 {
   "version": 2,
   "builds": [
-    { "src": "*.php",                 "use": "vercel-php@0.7.2" },
-    { "src": "api/*.php",             "use": "vercel-php@0.7.2" },
-    { "src": "admin/*.php",           "use": "vercel-php@0.7.2" },
-    { "src": "admin/partials/*.php",  "use": "vercel-php@0.7.2" },
-    { "src": "assets/**/*",           "use": "@vercel/static" }
+    {
+      "src": "*.php",
+      "use": "vercel-php@0.7.2",
+      "config": {
+        "includeFiles": ["includes/**", "data/**", "products.json", "*.php"]
+      }
+    },
+    {
+      "src": "api/*.php",
+      "use": "vercel-php@0.7.2",
+      "config": {
+        "includeFiles": ["includes/**", "data/**", "products.json", "*.php", "api/**"]
+      }
+    },
+    {
+      "src": "admin/*.php",
+      "use": "vercel-php@0.7.2",
+      "config": {
+        "includeFiles": ["includes/**", "data/**", "products.json", "*.php", "admin/**"]
+      }
+    },
+    {
+      "src": "admin/partials/*.php",
+      "use": "vercel-php@0.7.2",
+      "config": {
+        "includeFiles": ["includes/**", "data/**", "products.json", "*.php", "admin/**"]
+      }
+    },
+    { "src": "assets/**/*", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/assets/(.*)",          "dest": "/assets/$1" },
