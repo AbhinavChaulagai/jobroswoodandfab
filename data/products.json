@@ -115,5 +115,20 @@
         "image": "IMG_0757.JPG",
         "dimensions": "18\"W x 18\"D x 24\"H",
         "lead_time": "3–4 weeks"
+    },
+    {
+        "id": 7,
+        "name": "Coffee Table",
+        "category": "Coffee Tables",
+        "short_description": "Coffee Table for two",
+        "long_description": "12:45 PM",
+        "price": "450",
+        "materials": [
+            "White Oak"
+        ],
+        "images": [],
+        "image": "",
+        "dimensions": "",
+        "lead_time": ""
     }
 ]
