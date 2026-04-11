@@ -23,7 +23,7 @@ require_once __DIR__ . '/includes/header.php';
         <p class="hero-subtitle">Every piece starts as a raw slab and ends as an heirloom. Custom sizes, custom finishes — built the way it used to be done.</p>
         <div class="hero-actions">
             <a href="/products" class="btn btn-primary">Browse Products</a>
-            <a href="/contact" class="btn btn-outline">Request a Quote</a>
+            <a href="/contact" class="btn btn-primary">Request a Quote</a>
         </div>
     </div>
     <!-- Decorative wood-grain texture bars -->
