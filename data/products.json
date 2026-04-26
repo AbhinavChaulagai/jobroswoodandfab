@@ -19,23 +19,23 @@
         "lead_time": "1 week"
     },
     {
-        "id": 2,
-        "name": "Live-Edge Coffee Table",
-        "category": "Coffee Tables",
-        "short_description": "A stunning live-edge slab coffee table with hairpin legs.",
-        "long_description": "A single slab of black walnut, kiln-dried and finished with a satin polyurethane to protect the natural live edge. Paired with hand-bent steel hairpin legs for an industrial-meets-organic look. The live edge is preserved in its natural state — no two tables are alike. Perfect as a centerpiece for any living room. Custom sizes and leg finishes available upon request.",
-        "price": "$1,250",
+        "id": 3,
+        "name": "Floating Wall Shelves (Set of 3)",
+        "category": "Shelving",
+        "short_description": "Minimalist floating shelves crafted from reclaimed pine.",
+        "long_description": "These floating wall shelves are cut from reclaimed barn pine, lightly sanded and finished with a clear matte lacquer that lets the wood's history show through. Each shelf ships with concealed mounting hardware for a clean, floating appearance. Sold as a set of three in graduated lengths (24\", 30\", 36\"). Perfect for home offices, living rooms, or entryways. Custom stain options available.",
+        "price": "$340",
         "materials": [
-            "Black Walnut Slab",
-            "Steel Hairpin Legs",
-            "Satin Poly Finish"
+            "Reclaimed Barn Pine",
+            "Matte Lacquer",
+            "Concealed Steel Brackets"
         ],
         "images": [
-            "IMG_0760.jpeg"
+            "IMG_0841.jpeg"
         ],
-        "image": "IMG_0760.jpeg",
-        "dimensions": "48\"L x 22\"W x 18\"H",
-        "lead_time": "4–6 weeks"
+        "image": "IMG_0841.jpeg",
+        "dimensions": "36\" / 30\" / 24\" lengths x 8\"D x 1.5\"H",
+        "lead_time": "2–3 weeks"
     },
     {
         "id": 4,
