@@ -1,23 +1,22 @@
 [
     {
         "id": 1,
-        "name": "Farmhouse Dining Table",
-        "category": "Dining Tables",
-        "short_description": "A sturdy, hand-crafted farmhouse table built to last generations.",
-        "long_description": "Our Farmhouse Dining Table is the heart of every home. Hand-built from solid white oak with a hand-rubbed oil finish that brings out the natural grain. Features heavy-duty mortise-and-tenon joinery for heirloom strength. Available in lengths from 60\" to 108\" to seat your whole family. Each table is unique — knots, grain patterns, and mineral streaks are celebrated, not hidden.",
-        "price": "$1295",
+        "name": "50\" Garden Box",
+        "category": "Garden Boxes",
+        "short_description": "Hand Made from the Jobros. Built with Cedar. Great for growing tomatoes and more!",
+        "long_description": "This makes a great salsa garden for everyone who loves to grow tomatoes, herbs and more! If you need a little bit different sizing contact us and we will get back to you with a quote perfect for you!",
+        "price": "$80",
         "materials": [
-            "White Oak",
-            "Linseed Oil Finish",
-            "Steel Hardware"
+            "Cedar Wood"
         ],
         "images": [
-            "IMG_0778.jpeg",
-            "IMG_0757.JPG"
+            "https://i.ibb.co/MD4tS8JM/50-22-planter.jpg",
+            "https://i.ibb.co/wFz56BNQ/50-planter.jpg",
+            "https://i.ibb.co/jm752wy/temp-Image-AXGOUq.jpg"
         ],
-        "image": "IMG_0778.jpeg",
-        "dimensions": "72\"L x 36\"W x 30\"H (standard)",
-        "lead_time": "6–8 weeks"
+        "image": "https://i.ibb.co/MD4tS8JM/50-22-planter.jpg",
+        "dimensions": "50\"L 15\"W 23\"T",
+        "lead_time": "1 week"
     },
     {
         "id": 2,
