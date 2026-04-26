@@ -1,24 +1,5 @@
 [
     {
-        "id": 1,
-        "name": "50\" Garden Box",
-        "category": "Garden Boxes",
-        "short_description": "Hand Made from the Jobros. Built with Cedar. Great for growing tomatoes and more!",
-        "long_description": "This makes a great salsa garden for everyone who loves to grow tomatoes, herbs and more! If you need a little bit different sizing contact us and we will get back to you with a quote perfect for you!",
-        "price": "$80",
-        "materials": [
-            "Cedar Wood"
-        ],
-        "images": [
-            "https://i.ibb.co/MD4tS8JM/50-22-planter.jpg",
-            "https://i.ibb.co/wFz56BNQ/50-planter.jpg",
-            "https://i.ibb.co/jm752wy/temp-Image-AXGOUq.jpg"
-        ],
-        "image": "https://i.ibb.co/MD4tS8JM/50-22-planter.jpg",
-        "dimensions": "50\"L 15\"W 23\"T",
-        "lead_time": "1 week"
-    },
-    {
         "id": 2,
         "name": "Live-Edge Coffee Table",
         "category": "Coffee Tables",
