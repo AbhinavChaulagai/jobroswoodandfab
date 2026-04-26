@@ -1,22 +1,22 @@
 [
     {
-        "id": 2,
-        "name": "Live-Edge Coffee Table",
-        "category": "Coffee Tables",
-        "short_description": "A stunning live-edge slab coffee table with hairpin legs.",
-        "long_description": "A single slab of black walnut, kiln-dried and finished with a satin polyurethane to protect the natural live edge. Paired with hand-bent steel hairpin legs for an industrial-meets-organic look. The live edge is preserved in its natural state — no two tables are alike. Perfect as a centerpiece for any living room. Custom sizes and leg finishes available upon request.",
-        "price": "$1,250",
+        "id": 1,
+        "name": "50\" Garden Box",
+        "category": "Garden Boxes",
+        "short_description": "Hand Made from the Jobros. Built with Cedar. Great for growing tomatoes and more!",
+        "long_description": "This makes a great salsa garden for everyone who loves to grow tomatoes, herbs and more! If you need a little bit different sizing contact us and we will get back to you with a quote perfect for you!",
+        "price": "$80",
         "materials": [
-            "Black Walnut Slab",
-            "Steel Hairpin Legs",
-            "Satin Poly Finish"
+            "Cedar Wood"
         ],
         "images": [
-            "IMG_0760.jpeg"
+            "https://i.ibb.co/MD4tS8JM/50-22-planter.jpg",
+            "https://i.ibb.co/wFz56BNQ/50-planter.jpg",
+            "https://i.ibb.co/jm752wy/temp-Image-AXGOUq.jpg"
         ],
-        "image": "IMG_0760.jpeg",
-        "dimensions": "48\"L x 22\"W x 18\"H",
-        "lead_time": "4–6 weeks"
+        "image": "https://i.ibb.co/MD4tS8JM/50-22-planter.jpg",
+        "dimensions": "50\"L 15\"W 23\"T",
+        "lead_time": "1 week"
     },
     {
         "id": 3,
